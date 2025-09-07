@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ["localhost",
                  "127.0.0.1",
                  "samuel-marcelino-kicksarchive.pbp.cs.ui.ac.id"]
 
+
 # Application definition
 
 INSTALLED_APPS = [
