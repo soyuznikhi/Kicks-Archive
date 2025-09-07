@@ -33,7 +33,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["localhost",
                  "127.0.0.1",
-                 "samuel-marcelino-KicksArchive.pbp.cs.ui.ac.id"]
+                 "samuel-marcelino-kicksarchive.pbp.cs.ui.ac.id"]
 
 
 # Application definition
