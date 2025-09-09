@@ -13,15 +13,19 @@ class Product(models.Model):
         ('sneakers', 'Sneakers'),
     ]
     
+    # Required Attributes
     name = models.CharField()
     price = models.IntegerField()
     description = models.TextField()
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=255)
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='update')
     thumbnail = models.URLField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     is_featured = models.BooleanField(default=False)
+
+    # Extras
+    title = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    
     
     def __str__(self):
         return self.title
