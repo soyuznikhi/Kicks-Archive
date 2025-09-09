@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'football_shop.urls'
+ROOT_URLCONF = 'kicks_archive.urls'
 
 TEMPLATES = [
     {
@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'football_shop.wsgi.application'
+WSGI_APPLICATION = 'kicks_archive.wsgi.application'
 
 
 # Database
