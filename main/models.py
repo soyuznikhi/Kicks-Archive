@@ -22,9 +22,9 @@ class Product(models.Model):
     is_featured = models.BooleanField(default=False)
 
     # Extras
-    title = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    stock = models.IntegerField(default=0)
     
     
     def __str__(self):
