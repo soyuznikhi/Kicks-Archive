@@ -24,9 +24,9 @@ class Product(models.Model):
     # Extras
     created_at = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    stock = models.IntegerField(default=0)
+    stock = models.PositiveIntegerField(default=0)
     
     
     def __str__(self):
-        return self.title
+        return self.name
     

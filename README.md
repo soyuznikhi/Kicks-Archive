@@ -4,7 +4,42 @@ Pembuat: Samuel Marcelino Tindaon\
 NPM: 2406435830\
 Kelas: PBP A 
 
-## Penjelasan Checklist
+## Tugas 3: Penjelasan Checklist
+
+**Data Delivery**
+- Data delivery diperlukan dalam pengimplementasian sebuah platform sebagai cara untuk mengirim data di antara komponen-komponen platform. Dengan ini, pertukaran data antara client dan server bisa dilakukan. 
+- Data delivery biasanya dikirim/diterima melalui http/https request. Contoh bentuk data delivery adalah html, xml, dan json.
+**JSON vs XML**
+- Saya pribadi lebih memilih JSON karena secara sintaks lebih mudah dibanding XML dan mirip seperti JavaScript.
+- Sekarang ini, JSON lebih populer dibanding XML karena lebih readable dan ukuran filenya yang relatif lebih kecil dibanding XML untuk merepresentasikan data yang sama. Tidak hanya itu, parsing JSON lebih hemat sumber daya dibanding XML. Karena JSON berasal dari JavaScript, dia sudah disupport oleh JavaScript sehingga integrasi JSON ke aplikasi JavaScript akan sangat mudah.
+**is_valid()**
+- Fungsi dari method is_valid() dibutuhkan untuk mencegah masuknya data yang tidak valid pada forms, misalnya field yang masih kosong ataupun field integer yang diisi oleh string. Jika field diisi dengan data yang tidak valid, maka akan diberikan sebuah feedback kepada user untuk menggantinya. Jadi is_valid() diperlukan agar data yang masuk sesuai dengan field seharusnya. Pada project ini, hal ini diimplementasikan saat ingin membuat sebuah product baru. 
+**csrf_token**
+- csrf_token merupakan token security yang digenerate oleh Django. Token ini akan diverifikasi oleh server ketika mendapatkan sebuah request. Dengan verifikasi tersebut, server bisa memeriksa apakah request tersebut benar-benar datang dari client, bukan dari penyerang. Jika tidak menambahkan csrf_token, maka penyerang dapat mengirim request semaunya kepada server dan server akan menerima request tersebut layaknya request dari client. Hal ini terjadi karena tanpa adanya csrf_token, server tidak mempunyai cara untuk memverifikasi request sehingga dia akan menjalankan request apapun yang datang, bahkan jika datang dari penyerang.
+**Implementasi Checklist**
+- Menambahkan function show_xml, show_json, show_xml_by_id, show_json_by_id pada views.py. 
+- Untuk show_xml dan show_json, sebuah variabel akan menyimpan hasil query dari data-data yang ada pada Product. Selanjutnya, query tersebut akan dikonversi menjadi xml/json menggunakan serializers.serialize, akhirnya function show_xml/show_json akan me-return function HttpResponse dengan parameter query yang sudah serialized dan content_type="xml" atau "json". Dengan ini, data dapat dikembalikan dalam bentuk xml maupun json.
+- Untuk by_id, query akan di-filter atau di-get agar query yang muncul sesuai dengan id yang kita cari. Tidak hanya itu, ditambahkan juga try except agar dapat muncul exception HttResponse status 404 jika id tidak ditemukan.
+- Routing dilakukan dengan mengimport show_xml, show_json, show_xml_by_id, show_json_by_id ke urls.py lalu menambahkan path URL-nya ke dalam list urlpatterns agar dapat diakses. 
+- Untuk membuat tombol Add dan Details, dimulai dengan membuat function add_product dan show_product pada views.py dan membuat file template create_product.html dan product_detail.html.
+- Untuk tombol Add, function add_product diisi dengan me-return render form seseuai dengan template create_product.html dan memeriksa data yang diberikan pada form tersebut sudah valid. 
+- Untuk tombol Details, function show_product diisi dengan function get_object_or_404 untuk membuka object dengan id yang diberikan pada parameter (id) agar dapat me-return render dari object yang diinginkan sesuai template product_detail.html.
+- Pada urls.py, create_product dan show_product diimport dan path url-nya ditambahkan ke urlpatterns agar bisa diakses.
+- Agar tombolnya muncul, maka diimplementasikan pada main.html dengan 
+    ```html
+    <a href="{% url 'main:create_product' %}">
+        <button>+ Add Product</button>
+    </a>
+    ```
+    dan
+    ```html
+    <p><a href="{% url 'main:show_product' product.id %}"><button>Details</button></a></p>
+    ```
+- Halaman untuk form pada create_product.html berupa sebuah template html yang akan menampilkan atribut-atribut yang perlu diisi oleh user sesuai dengan data fieldnya. 
+- Halaman untuk detail pada show_product.html berupa sebuah template html yang akan menampilkan atribut-atribut dari product yang ada. 
+    
+
+## Tugas 2: Penjelasan Checklist
 
 **Membuat Project**
 - Membuat direktori project baru lalu mengaktifkan virtual environment.
