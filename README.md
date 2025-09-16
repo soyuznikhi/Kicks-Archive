@@ -37,7 +37,7 @@ Kelas: PBP A
     ```
 - Halaman untuk form pada create_product.html berupa sebuah template html yang akan menampilkan atribut-atribut yang perlu diisi oleh user sesuai dengan data fieldnya. 
 - Halaman untuk detail pada show_product.html berupa sebuah template html yang akan menampilkan atribut-atribut dari product yang ada. 
-- Screenshot akses url pada postman: https://drive.google.com/drive/folders/1lTejaewhVXlv150Mmnsi5ilbCJ1HwA63?usp=sharing
+- Screenshot akses url xml dan json pada postman: https://drive.google.com/drive/folders/1lTejaewhVXlv150Mmnsi5ilbCJ1HwA63?usp=sharing
     
 
 ## Tugas 2: Penjelasan Checklist
