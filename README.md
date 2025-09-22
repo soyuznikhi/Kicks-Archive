@@ -33,6 +33,12 @@ Kelas: PBP A
     - Biasanya session akan hilang ketika aplikasi dan browser ditutup, jadi session akan dibuat lagi ketika user membuka aplikasi web tersebut.
     - Biasanya session id masih disimpan pada cookies sehingga muncul risiko adanya session hijacking.
 
+**Keamanan Cookies**
+- Pada umumnya, cookies tidak sepenuhnya aman karena secara default tidak encrypted dan bisa dengan mudah dimodifikasi dari sisi client. Hal ini menyebabkan munculnya beberapa risiko keamanan seperti XSS, session hijacking, dll. 
+- Oleh karena itu, Django menyediakan beberapa hal untuk keamanan cookie yang bisa ditambahkan oleh developer pada projectnya.
+    - Mengaktifkan secure cookie pada settings.py agar bisa mengirim cookie melalui https saja.
+    - Mengaktifkan CSRF cookie dan terkait hal ini django juga sudah memiliki CSRF token.
+
 **Checkpoint**
 - Mengimport library yang dibutuhkan lalu membuat function register pada views.py menggunakan form UserCreationForm. Menyertakan juga file register.html pada folder template sebagai template untuk render pada function register. Tambahkan juga path url ke urlpatterns agar bisa dideteksi saat request.
 - Mengimport library yang dibutuhkan untuk autentikasi dan sebagainya lalu membuat function login pada views.py. Menyertakan juga file login.html pada folder template sebagai template untuk render pada function login. Tambahkan juga path url ke urlpatterns agar bisa dideteksi saat request. 
@@ -43,10 +49,6 @@ Kelas: PBP A
 - Untuk menghubungkan user dengan product, maka harus ditambahkan atribut baru yaitu user yang berupa foreign key yang berasal dari user. Pada models.py tambahkan atribut user berupa foreign key. Lakukan makemigrations dan migrate agar database terupdate.
 - Ubah function create_product agar bisa menyimpan user yang membuat product tersebut. Tambahkan juga filter pada function show_main agar bisa melihat product yang dibuat oleh user itu sendiri. Tambahkan tombol filter all dan filter my product pada main.html dan tambahkan detail vendor/user yang menjual pada product_detail.html.
 - Membuat 2 akun pengguna dan 3 dummy data berdasarkan model yang sudah dibuat. Hal ini diselesaikan dengan meregistrasi 2 akun baru, dan masing-masingnya menggunakan button create product dan mengisi data atribut product untuk menambahkan product baru pada database lokal. 
-
-**Keamanan Cookies**
-- Pada umumnya, cookies tidak sepenuhnya aman karena secara default tidak encrypted dan bisa dengan mudah dimodifikasi dari sisi client. Hal ini menyebabkan munculnya beberapa risiko keamanan seperti XSS, session hijacking, dll. 
-
 
 ## Tugas 3: Penjelasan Checklist
 
