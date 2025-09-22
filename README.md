@@ -4,18 +4,66 @@ Pembuat: Samuel Marcelino Tindaon\
 NPM: 2406435830\
 Kelas: PBP A 
 
+## Tugas 4: Penjalasan Checkpoint
+
+ **AuthenticationForm**
+- AuthenticationForm merupakan objek yang digunakan untuk membuat suatu form berdasarkan request dari user. AuthenticationForm digunakan saat user melakukan proses login. Dia menyediakan field username dan password beserta proses validasinya. 
+
+**Autentikasi vs Otoriasi**
+- Autentikasi merupakan proses verifikasi identitas seorang user.
+- Otorisasi merupakan proses menentukan permission apa yang dimiliki oleh user yang sudah terautentikasi.
+- Dalam django, proses autentikasi dilakukan saat proses login dalam AuthenticationForm. Proses otorisasi dilakukan setelah user login, misalnya ketika suatu function views.py yang diberikan @login_required, hal ini mengharuskan user login terlebih dahulu untuk bisa diakses. Contoh lainnya adalah @permissions_required. Permission default dari user sudah diberikan oleh django melalui django.contrib.auth yang ada pada INSTALLED_APPS di settings.py.
+
+**Sessions and Cookies**
+- Cookies merupakan data kecil (tentang user) yang disimpan pada browser client. 
+- Kelebihan cookies: 
+    - Data tersimpan pada browser client sehingga mengurangi beban server.
+    - Mudah diakses sehingga cocok untuk menyimpan data seperti user preferences.
+    - Data masih available ketika aplikasi dan browser ditutup.
+- Kekurangan cookies:
+    - Ukurannya yang kecil membatasi bentuk dan besar data yang dapat disimpan.
+    - Jika security kurang aman, maka data cookies dapat dimodifikasi dengan muda dari sisi client. 
+    - Rentan terhadap XSS (cross-site scripting) untuk mencuri data cookie.
+- Session merupakan informasi (tentang user) yang disimpan pada server.
+- Kelebihan sessions:
+    - Lebih aman untuk menyimpan data besar dan sensitif (status login, keranjang pada e-commerce, dsb). 
+    - Biasanya client tidak memiliki akses untuk memodifikasi data yang tersimpan pada session. 
+ - Kekurangan sessions:
+    - Data harus disimpan pada database, file, dsb sehingga menjadi beban untuk server.
+    - Biasanya session akan hilang ketika aplikasi dan browser ditutup, jadi session akan dibuat lagi ketika user membuka aplikasi web tersebut.
+    - Biasanya session id masih disimpan pada cookies sehingga muncul risiko adanya session hijacking.
+
+**Checkpoint**
+- Mengimport library yang dibutuhkan lalu membuat function register pada views.py menggunakan form UserCreationForm. Menyertakan juga file register.html pada folder template sebagai template untuk render pada function register. Tambahkan juga path url ke urlpatterns agar bisa dideteksi saat request.
+- Mengimport library yang dibutuhkan untuk autentikasi dan sebagainya lalu membuat function login pada views.py. Menyertakan juga file login.html pada folder template sebagai template untuk render pada function login. Tambahkan juga path url ke urlpatterns agar bisa dideteksi saat request. 
+- Mengimport logout lalu membuat fungsi logout pada views.py dan menambahkan tombol logout pada main.html, tambahkan juga path urlnya ke urlpatterns.   
+- Agar user harus melalui proses login terlebih dahulu untuk mengakses aplikasi web, maka diberikan @login_required(login_url='/login') pada function show_main dan show_product. Hal ini memastikan user sudah login dulu agar bisa melihat main dan detail. 
+- Agar mengetahu sesi terakhir login user, maka harus mengimplementasikan cookies pada aplikasi web. Maka harus mengimport library yang sesuai dan menambahkan code block untuk menyimpan data cookie last login pada function login. Tampilkan data cookie login pada variabel context di fungsi show_main. Tambahkan juga text last login pada main.html.
+- Pada function logout, tambahkan block code untuk menghapus cookie last login.
+- Untuk menghubungkan user dengan product, maka harus ditambahkan atribut baru yaitu user yang berupa foreign key yang berasal dari user. Pada models.py tambahkan atribut user berupa foreign key. Lakukan makemigrations dan migrate agar database terupdate.
+- Ubah function create_product agar bisa menyimpan user yang membuat product tersebut. Tambahkan juga filter pada function show_main agar bisa melihat product yang dibuat oleh user itu sendiri. Tambahkan tombol filter all dan filter my product pada main.html dan tambahkan detail vendor/user yang menjual pada product_detail.html.
+- Membuat 2 akun pengguna dan 3 dummy data berdasarkan model yang sudah dibuat. Hal ini diselesaikan dengan meregistrasi 2 akun baru, dan masing-masingnya menggunakan button create product dan mengisi data atribut product untuk menambahkan product baru pada database lokal. 
+
+**Keamanan Cookies**
+- Pada umumnya, cookies tidak sepenuhnya aman karena secara default tidak encrypted dan bisa dengan mudah dimodifikasi dari sisi client. Hal ini menyebabkan munculnya beberapa risiko keamanan seperti XSS, session hijacking, dll. 
+
+
 ## Tugas 3: Penjelasan Checklist
 
 **Data Delivery**
 - Data delivery diperlukan dalam pengimplementasian sebuah platform sebagai cara untuk mengirim data di antara komponen-komponen platform. Dengan ini, pertukaran data antara client dan server bisa dilakukan. 
 - Data delivery biasanya dikirim/diterima melalui http/https request. Contoh bentuk data delivery adalah html, xml, dan json.
+
 **JSON vs XML**
 - Saya pribadi lebih memilih JSON karena secara sintaks lebih mudah dibanding XML dan mirip seperti JavaScript.
 - Sekarang ini, JSON lebih populer dibanding XML karena lebih readable dan ukuran filenya yang relatif lebih kecil dibanding XML untuk merepresentasikan data yang sama. Tidak hanya itu, parsing JSON lebih hemat sumber daya dibanding XML. Karena JSON berasal dari JavaScript, dia sudah disupport oleh JavaScript sehingga integrasi JSON ke aplikasi JavaScript akan sangat mudah.
+
 **is_valid()**
 - Fungsi dari method is_valid() dibutuhkan untuk mencegah masuknya data yang tidak valid pada forms, misalnya field yang masih kosong ataupun field integer yang diisi oleh string. Jika field diisi dengan data yang tidak valid, maka akan diberikan sebuah feedback kepada user untuk menggantinya. Jadi is_valid() diperlukan agar data yang masuk sesuai dengan field seharusnya. Pada project ini, hal ini diimplementasikan saat ingin membuat sebuah product baru. 
+
 **csrf_token**
 - csrf_token merupakan token security yang digenerate oleh Django. Token ini akan diverifikasi oleh server ketika mendapatkan sebuah request. Dengan verifikasi tersebut, server bisa memeriksa apakah request tersebut benar-benar datang dari client, bukan dari penyerang. Jika tidak menambahkan csrf_token, maka penyerang dapat mengirim request semaunya kepada server dan server akan menerima request tersebut layaknya request dari client. Hal ini terjadi karena tanpa adanya csrf_token, server tidak mempunyai cara untuk memverifikasi request sehingga dia akan menjalankan request apapun yang datang, bahkan jika datang dari penyerang.
+
 **Implementasi Checklist**
 - Menambahkan function show_xml, show_json, show_xml_by_id, show_json_by_id pada views.py. 
 - Untuk show_xml dan show_json, sebuah variabel akan menyimpan hasil query dari data-data yang ada pada Product. Selanjutnya, query tersebut akan dikonversi menjadi xml/json menggunakan serializers.serialize, akhirnya function show_xml/show_json akan me-return function HttpResponse dengan parameter query yang sudah serialized dan content_type="xml" atau "json". Dengan ini, data dapat dikembalikan dalam bentuk xml maupun json.
@@ -54,6 +102,7 @@ Kelas: PBP A
 **Konfigurasi Environment Variables**
 - Membuat file .env pada direktori utama dan menulis PRODUCTION=False agar kode bisa berjalan pada environment yang berbeda.
 - Membuat file .env.prod untuk konfigurasi production dan diisi dengan kredensial database.
+
 **Konfigurasi settings.py**
 - Menambahkan kode berikut pada settings.py : 
     ```bash
@@ -74,12 +123,14 @@ Kelas: PBP A
 - Tambahkan kredensial pada env.prod pada project menggunakan raw editor.
 - Tambahkan URL deployment PWS pada ALLOWED_HOSTS agar project dapat diakses dari URL PWS.
 - Bisa melakukan git add, commit, push PWS.
+
 **Membuat Aplikasi**
 - Membuat aplikasi dengan nama main :
     ```bash
     python manage.py startapp main
     ```
 - Tambahkan aplikasi main pada INSTALLED_APPS di settings.py
+
 **Membuat Template**
 - Pada folder main, buat folder bernama templates yang berisi file main.html
 - Isi main.html sesuai ketentuan.
@@ -93,14 +144,18 @@ Kelas: PBP A
     python manage.py migrate 
     ```
     Setiap kali ada perubahan model, harus di migrate.
+
 **Membuat View**
 - Pada views.py, tambahkan show_main yang akan menerima request. Tambahkan juga dictionary context yang diinginkan.
 - show_main akan me-return render dari request, "main.html", dan context. Fungsi render akan menampilkan context pada file main.html (templatenya)
+
 **Routing pada main**
 - Membuat file urls.py pada folder main dan isi dengan routing ke main.
 - Pada urls.py, tambahkan juga list urlpatterns yang berisi fungsi path dengan argumen '' (root), show_main, dan name="show_main". Dengan ini, view show_main akan terpanggil dan name="show_main" memudahkan kita menggunakan reverse url.
+
 **Routing pada Project**
 - Pada level project, di urls.py, tambahkan juga list urlpatterns dengan isi fungsi path dengan argumen '', dan include("main.urls") agar bisa mengimpor pola rute URL dari aplikasi main.
+
 **Push GitHub dan PWS**
 - Melakukan git add, commit, dan push ke GitHub dan PWS.
 ## Penjelasan Request Client ke Web
