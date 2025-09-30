@@ -4,6 +4,45 @@ Pembuat: Samuel Marcelino Tindaon\
 NPM: 2406435830\
 Kelas: PBP A 
 
+## Tugas 5: Penjalasan Checkpoint
+**Prioritas CSS Selector**
+- Jika beberapa selector diterapkan pada elemen html yang sama, maka berikut urutannya:
+1. Inline Style (apapun yang di dalam style tag)
+2. ID selectors
+3. Classes selectors
+4. Element selectors
+- Misalnya terdapat berikut:
+    ```css
+    p { color: blue; }        
+    .text { color: green; }   
+    #intro { color: red; }  
+    ```
+    Jika elemen <p id="intro" class="text">, warna yang diterapkan adalah merah karena ID lebih spesifik.
+
+**Responsive Design**
+- Responsive design sangat penting agar aplikasi web dapat menyesuaikan dengan device klien (seperti mobile, tablet, dan desktop).
+- Aplikasi web menyesuaikan secara tampilan sehingga tidak diperlukan membuat 2 versi aplikasi web yang berbeda.
+- Contoh responsive: instagram &rarr; aplikasi webnya dapat diakses melalui mobile dan desktop, lalu tampilannya sudah menyesuaikan.
+- Contoh belum responsive: aplikasi web sekarang ini sudah menerapkan responsive design, kemungkinan yang belum responsive adalah website tua yang sudah outdated yang biasanya tampilannya masih seperti desktop walaupun dibuka pada mobile. 
+
+**Perbedaan Margin, Border, dan Padding**
+- Margin: Jarak di luar elemen, bisa juga dikatakan menjadi jarak antar elemen
+- Border: Pembatas di perimeter elemen
+- Padding: Jarak antara konten elemen dengan border
+- Sehingga posisi Margin paling luar, lalu border, lalu padding.
+
+**Flex Box & Grid Layout**
+- Flex box digunakan untuk membuat layout elemen pada satu arah, seperti menu horizontal. Flex box mirip dengan sebuah container yang membungkus berbagai elemen dan menyusunnya layaknya sebuah kolom atau baris (tetapi tidak keduanya) yang sudah fix (ukuran elemen fix pada salah satu dimensi). Flex box biasanya digunakan jika diperlukan keseragaman bentuk pada elemen.
+- Grid layout digunakan untuk membuat layout elemen pada dua arah, seperti baris dan kolom. Jadi elemen dapat disusun pada sebuah container yang seperti sebuah grid yang cukup flexibel. Di sini, ukuran elemen bisa berubah pada dua dimensi sehingga ukuran elemen bisa berbeda-beda pada sebuah grid. Grid layout digunakan jika ingin mengimplementasi design yang kompleks, seperti ukuran elemen berbeda, jarak antar elemen berbeda, dsb.
+
+**Implementasi Checklist**
+- Fungsi untuk menghapus dan mengedit product diimplementasikan dengan membuat templatenya dan functionnya pada views.py lalu menambahkan path pada urls.py. Buat juga template html untuk hapus dan edit product. Tambahkan tombol untuk mengedit dan menghapus pada card_product.html agar muncul langsung pada card produk yang ada. 
+- Kustomisasi semua template menggunakan tailwind dan css. Tambahkan file static/css/global.css pada root directory, lalu tambahkan tailwind dan css pada base.html. global.css dapat diisi dengan tampilan form yang kita inginkan. Setelah itu bisa modifikasi template yang ada dengan syntax css dan tailwind.
+- Jika belum ada product yang terdaftar maka berikan informasi bahwa produk belum ada pada main.html dengan {% if not product_list %} dan else-nya jika product sudah ada.
+- Product ditampilkan menggunakan template product_card.html agar terlihat rapi. card_product.html akan diisi oleh sebagian informasi tentang atribut product dan diberikan 2 label, yaitu category productnya dan apakah product tersebut featured atau tidak. 
+- Tambahkan navbar yang responsiv untuk mobile dana desktop. Pada navbar.html, tambahkan code block untuk menyesuaikan dengan tampilan desktop dan mobile.
+
+
 ## Tugas 4: Penjalasan Checkpoint
 
  **AuthenticationForm**
