@@ -17,7 +17,11 @@ Kelas: PBP A
     .text { color: green; }   
     #intro { color: red; }  
     ```
-    Jika elemen <p id="intro" class="text">, warna yang diterapkan adalah merah karena ID lebih spesifik.
+    Jika ada elemen 
+    ```css
+    <p id="intro" class="text">
+    ```
+    maka warna yang diterapkan adalah merah karena ID lebih spesifik.
 
 **Responsive Design**
 - Responsive design sangat penting agar aplikasi web dapat menyesuaikan dengan device klien (seperti mobile, tablet, dan desktop).
