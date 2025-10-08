@@ -1,72 +1,118 @@
 {% load static %}
-<article class="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-  <!-- Thumbnail -->
-  <div class="aspect-[16/9] relative overflow-hidden">
-    {% if product.thumbnail %}
-      <img src="{{ product.thumbnail }}" alt="{{ product.name }}" class="w-full h-full object-cover">
-    {% else %}
-      <div class="w-full h-full bg-gray-200"></div>
-    {% endif %}
 
-    <!-- Status Badges -->
-    <div class="absolute top-3 right-3 flex space-x-2">
-      {% if product.is_featured %}
-        <i>
-          <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-[#f5e042] text-red-800">
-            FEATURED
-          </span>
-        </i>
-      {% endif %}
-    </div>
-  </div>
+<!-- Product Card Template (used by JavaScript) -->
+<template id="product-template">
+  <article 
+    class="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
 
-  <!-- Content -->
-  <div class="p-5">
-    <div class="flex items-center text-sm text-gray-500 mb-3">
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-[#000000] text-white">
-          {{ product.get_category_display }}
-      </span>
-      <span class="mx-2">•</span>
-      <time datetime="{{ product.created_at|date:'c' }}">
-        {{ product.created_at|date:"M j, Y" }}
-      </time>
+    <!-- Thumbnail -->
+    <div class="aspect-[16/9] relative overflow-hidden thumbnail-container">
+      <!-- Filled by JS -->
     </div>
 
-    <h3 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 leading-tight">
-      <a href="{% url 'main:show_product' product.id %}" class="hover:text-[#ba920f] transition-colors">
-        {{ product.name }}
-      </a>
-    </h3>
+    <!-- Content -->
+    <div class="p-5">
+      <div class="flex items-center text-sm text-gray-500 mb-3">
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-[#000000] text-white category-badge">
+          <!-- Category -->
+        </span>
+        <span class="mx-2">•</span>
+        <time class="created-date text-sm"></time>
+      </div>
 
-    <h3 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 leading-tight">
-        Rp {{ product.price }}
-    </h3>
+      <h3 class="text-lg font-semibold text-gray-900 mb-3 leading-tight line-clamp-2">
+        <a class="product-link hover:text-[#ba920f] transition-colors"></a>
+      </h3>
 
-    <p class="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4">
-      {{ product.description|truncatewords:20 }}
-    </p>
+      <h3 class="text-lg font-semibold text-gray-900 mb-3 price"></h3>
 
-    <!-- Action Buttons -->
-    {% if user.is_authenticated and product.user == user %}
-      <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-        <a href="{% url 'main:show_product' product.id %}" class="text-[#000000] hover:text-[#ba920f] font-medium text-sm transition-colors">
-          Read more
-        </a>
-        <div class="flex space-x-2">
-          <a href="{% url 'main:edit_product' product.id %}" class="text-gray-600 hover:text-gray-700 text-sm transition-colors">
-            Edit
+      <p class="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4 description"></p>
+
+      <div class="action-buttons"></div>
+    </div>
+  </article>
+</template>
+
+
+<script>
+  // This function creates a product card using the <template> above
+  function createProductCard(product, currentUserId) {
+    const template = document.getElementById("product-template");
+    const clone = template.content.cloneNode(true);
+
+    // Thumbnail
+    const thumbnailContainer = clone.querySelector(".thumbnail-container");
+    if (product.thumbnail) {
+      thumbnailContainer.innerHTML = `
+        <img src="${product.thumbnail}" alt="${product.name}" class="w-full h-full object-cover">
+      `;
+    } else {
+      thumbnailContainer.innerHTML = `<div class="w-full h-full bg-gray-200"></div>`;
+    }
+
+    // Featured badge
+    if (product.is_featured) {
+      const badge = document.createElement("span");
+      badge.className = "absolute top-3 right-3 inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-[#f5e042] text-red-800";
+      badge.textContent = "FEATURED";
+      thumbnailContainer.appendChild(badge);
+    }
+
+    // Category
+    clone.querySelector(".category-badge").textContent = product.category_display || product.category;
+
+    // Created date
+    const createdDate = new Date(product.created_at).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    });
+    clone.querySelector(".created-date").textContent = createdDate;
+
+    // Name + link
+    const link = clone.querySelector(".product-link");
+    link.textContent = product.name;
+    link.href = `/product/${product.id}/`;
+
+    // Price
+    const formattedPrice = product.price.toLocaleString("id-ID");
+    clone.querySelector(".price").textContent = `Rp ${formattedPrice}`;
+
+    // Description
+    const shortDesc = product.description.length > 100 
+      ? product.description.slice(0, 100) + "..."
+      : product.description;
+    clone.querySelector(".description").textContent = shortDesc;
+
+    //Tambahkan button edit dan delete if product milik si user
+    const actionContainer = clone.querySelector(".action-buttons");
+    if (product.user_id === currentUserId) {
+      actionContainer.innerHTML = `
+        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+          <a href="/product/${product.id}/" class="text-[#000000] hover:text-[#ba920f] font-medium text-sm transition-colors">
+            Read more
           </a>
-          <a href="{% url 'main:delete_product' product.id %}" class="text-red-600 hover:text-red-700 text-sm transition-colors">
-            Delete
+          <div class="flex space-x-2">
+            <a href="/edit-product/${product.id}/" class="text-gray-600 hover:text-gray-700 text-sm transition-colors">
+              Edit
+            </a>
+            <button onclick="showDeleteModal('${item.id}')" class="text-red-600 hover:text-red-700 text-sm transition-colors">
+              Delete
+            </button>
+          </div>
+        </div>
+      `;
+    } else {
+      actionContainer.innerHTML = `
+        <div class="pt-4 border-t border-gray-100">
+          <a href="/product/${product.id}/" class="text-[#000000] hover:text-[#ba920f] font-medium text-sm transition-colors">
+            Read more →
           </a>
         </div>
-      </div>
-    {% else %}
-      <div class="pt-4 border-t border-gray-100">
-        <a href="{% url 'main:show_product' product.id %}" class="text-[#000000] hover:text-[#ba920f] font-medium text-sm transition-colors">
-          Read more →
-        </a>
-      </div>
-    {% endif %}
-  </div>
-</article>
+      `;
+    }
+
+    return clone;
+  }
+
+</script>

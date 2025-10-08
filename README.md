@@ -4,6 +4,37 @@ Pembuat: Samuel Marcelino Tindaon\
 NPM: 2406435830\
 Kelas: PBP A 
 
+## Tugas 6: Penjelasan Checkpoint
+**Synchronous Request vs Asynchronous Request**
+- Synchronous request bersifat blocking, yaitu seluruh halaman web harus menunggu respons dari server dulu, baru request selanjutnya bisa diterima.
+- Ansynchronous request bersifat non-blocking, yaitu banyak request dapat diterima tanpa harus menunggu respons dari server untuk setiap request tersebut. 
+
+**Alur Kerja AJAX (request-response)**
+- Ketika ada event yang terjadi pada browser client, JavaScript akan membuat object AJAX berupa XMLHttpRequest. 
+- XMLHttpRequest ini akan mengirim request kepada server, lalu server memproses request tersebut.
+- Setelah diproses, maka server akan mengembalikan response berupa JSON (bukan seluruh page html).
+- Javascript menerima response tersebut dan memperbarui tampilan halaman.
+
+**Keuntungan AJAX**
+- AJAX memiliki keuntungan lebih dibandingkan render biasa pada Django karena hal-hal ini:
+- Proses AJAX mengembalikan response JSON yang singkat dibandingkan response render yang mengembalikan page html penuh.
+- Melalui AJAX, hanya bagian tertentu dari halaman akan diperbarui, bukan semua halaman, jadi jauh lebih cepat dan dinamis.
+- Dari segi user experience, AJAX memberikan feel yang jauh lebih mulus dan responsif karena halaman tidak perlu di-reload berulang-ulang.
+
+**Keamanan Login & Register with AJAX**
+- Untuk memastikan keamanan login dan registrasi menggunakan AJAX, maka diperlukan implementasi CSRF token.
+- Kita juga bisa membatasi method login dan register hanya untuk POST dengan menambahkan
+    ```python
+    @require POST
+    ```
+- Gunakan HTTPS untuk komunikasi AJAX agar lebih secure dalam mengirim data password.
+- Jangan mengirim data sensitif menggunakan GET, gunakanlah POST.
+
+**Pengaruh AJAX terhadap User Experience**
+- Respons akan lebih cepat dan mulus karena AJAX mengupdate bagian yang diperlukan saja, bukan seluruh page.
+- AJAX dapat menampilkan CRUD tanpa user harus pindah-pindah halaman, misalnya menggunakan modal.
+- User akan merasa lebih aman ketika aplikasi yang mereka gunakan menerapkan AJAX karena security dapat di-handle dengan mudah melalui AJAX.
+
 ## Tugas 5: Penjalasan Checkpoint
 **Prioritas CSS Selector**
 - Jika beberapa selector diterapkan pada elemen html yang sama, maka berikut urutannya:

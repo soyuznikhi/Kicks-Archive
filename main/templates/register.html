@@ -115,4 +115,67 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.querySelector("form");
+  const button = form.querySelector("button[type='submit']");
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    // Clear previous error messages
+    document.querySelectorAll('.error-message').forEach(el => el.remove());
+
+    showLoader();
+    const formData = new FormData(form);
+    button.disabled = true;
+    button.innerText = "Creating Account...";
+
+    try {
+      const response = await fetch("", {
+        method: "POST",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Success message
+        const msg = document.createElement("div");
+        msg.className = "px-4 py-3 rounded text-sm border bg-yellow-50 border-yellow-200 text-yellow-700 mt-4 text-center";
+        msg.innerText = data.message;
+        form.insertAdjacentElement("beforebegin", msg);
+        // Redirect after short delay
+        setTimeout(() => {
+          window.location.href = data.redirect_url;
+        }, 10);
+      } else {
+        // Show validation errors
+        if (data.errors) {
+          for (const [field, errors] of Object.entries(data.errors)) {
+            const input = document.querySelector(`[name="${field}"]`);
+            if (input) {
+              const error = document.createElement("div");
+              error.className = "error-message text-sm text-red-600 mt-1";
+              error.innerText = errors.join(", ");
+              input.insertAdjacentElement("afterend", error);
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Registration failed:", err);
+    } finally {
+      hideLoader();
+      button.disabled = false;
+      button.innerText = "Create Account";
+    }
+  });
+});
+
+</script>
 {% endblock content %}

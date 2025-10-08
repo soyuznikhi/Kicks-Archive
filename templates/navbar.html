@@ -24,7 +24,7 @@
               <div class="text-sm font-medium text-gray-900">{{ name|default:user.username }}</div>
               <div class="text-xs text-gray-500">{{ npm|default:"Student" }} - {{ class|default:"Class" }}</div>
             </div>
-            <a href="{% url 'main:logout' %}" class="text-red-600 hover:text-red-700 font-medium transition-colors">
+            <a href="{% url 'main:logout' %}" class="logout-button text-red-600 hover:text-red-700 font-medium transition-colors">
               Logout
             </a>
           {% else %}
@@ -70,7 +70,7 @@
               <div class="font-medium text-gray-900">{{ name|default:user.username }}</div>
               <div class="text-sm text-gray-500">{{ npm|default:"Student" }} - {{ class|default:"Class" }}</div>
             </div>
-            <a href="{% url 'main:logout' %}" class="block text-red-600 hover:text-red-700 font-medium py-3 transition-colors">
+            <a href="{% url 'main:logout' %}" class="logout-button" class="block text-red-600 hover:text-red-700 font-medium py-3 transition-colors">
               Logout
             </a>
           {% else %}
@@ -93,5 +93,42 @@
       btn.addEventListener("click", () => {
         menu.classList.toggle("hidden");
       });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const logoutButtons = document.querySelectorAll(".logout-button");
+
+        logoutButtons.forEach(btn => {
+            btn.addEventListener("click", async (e) => {
+                e.preventDefault(); // prevent normal navigation
+
+                showLoader(); // show loader
+                try {
+                    const response = await fetch("{% url 'main:logout' %}", {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": "{{ csrf_token }}",
+                            "X-Requested-With": "XMLHttpRequest"
+                        }
+                    });
+
+                    if (response.ok) {
+                        showToast("Logged out", "", "success");
+                        setTimeout(() => {
+                            window.location.href = "/"; // redirect
+                        }, 500);
+                    } else {
+                        showToast("Error", "", "error");
+                    }
+                } catch (err) {
+                    showToast("Error", "", "error");
+                    console.error(err);
+                } finally {
+                    hideLoader();
+                }
+            });
+          });
+      });
+
+
     </script>
   </nav>

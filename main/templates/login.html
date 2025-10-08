@@ -38,7 +38,7 @@
         </div>
       {% endif %}
 
-      <form method="POST" action="" class="space-y-6">
+      <form id="loginForm" method="POST" action="" class="space-y-6">
         {% csrf_token %}
         
         <div>
@@ -102,4 +102,54 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("loginForm");
+  const btn = form.querySelector("button[type='submit']");
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault(); 
+    
+    // Show loading spinner
+    btn.disabled = true;
+    btn.classList.add('opacity-50', 'cursor-not-allowed');
+    showLoader();
+
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("", {
+        method: "POST",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          "X-CSRFToken": formData.get("csrfmiddlewaretoken"),
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        showToast("Signed in successfully!","","success");
+        // Redirect after short delay
+        setTimeout(() => {
+          window.location.href = data.redirect_url || "/";
+        }, 400);
+      } else {
+        showToast("Invalid username or password.", "", "error");
+      }
+    } catch (err) {
+        console.error("Login error:", err);
+        showToast("Something went wrong. Please try again.", "", "error");
+    }  finally {
+      // Hide loading spinner
+      hideLoader();
+      btn.disabled = false;
+      btn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+  });
+});
+</script>
+
 {% endblock content %}
