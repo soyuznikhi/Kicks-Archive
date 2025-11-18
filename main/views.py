@@ -12,6 +12,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils.html import strip_tags
+import requests
+import json
 
 # Create your views here.
 @login_required(login_url='/login')
@@ -168,14 +170,14 @@ def register(request):
         if form.is_valid():
             form.save()
             
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'success': True,'message': 'Your account has been successfully created!','redirect_url': reverse('main:login')})
             
             messages.success(request, 'Your account has been successfully created!')
             return redirect('main:login')
         
         else:
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'success': False,'errors': form.errors}, status=400)
     else:
         form = UserCreationForm()
@@ -192,7 +194,7 @@ def login_user(request):
             login(request, user)
             redirect_url = reverse("main:show_main")
             
-            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
                 response = JsonResponse({"success": True,"redirect_url": reverse("main:show_main"),})
                 response.set_cookie('last_login', str(datetime.datetime.now()))
                 return response
@@ -201,7 +203,7 @@ def login_user(request):
             response.set_cookie('last_login', str(datetime.datetime.now()))
             return response
         
-        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
             errors = form.errors.get_json_data()
             return JsonResponse({"success": False,"errors": errors,}, status=400)
 
@@ -226,3 +228,49 @@ def logout_view(request):
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
+
+def proxy_image(request):
+    image_url = request.GET.get('url')
+    if not image_url:
+        return HttpResponse('No URL provided', status=400)
+    
+    try:
+        # Fetch image from external source
+        response = requests.get(image_url, timeout=10)
+        response.raise_for_status()
+        
+        # Return the image with proper content type
+        return HttpResponse(
+            response.content,
+            content_type=response.headers.get('Content-Type', 'image/jpeg')
+        )
+    except requests.RequestException as e:
+        return HttpResponse(f'Error fetching image: {str(e)}', status=500)
+    
+    
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        name = strip_tags(data.get("name", ""))  # Strip HTML tags
+        price = data.get("price", "") 
+        description = strip_tags(data.get("description", ""))  # Strip HTML tags
+        category = data.get("category", "")
+        thumbnail = data.get("thumbnail", "")
+        is_featured = data.get("is_featured", False)
+        user = request.user
+        
+        new_product = Product(
+            name=name, 
+            price=price,
+            description=description,
+            category=category,
+            thumbnail=thumbnail,
+            is_featured=is_featured,
+            user=user
+        )
+        new_product.save()
+        
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
