@@ -143,6 +143,27 @@ def show_json(request):
 
     return JsonResponse(data, safe=False)
 
+
+def show_json_filter(request):
+    product_list = Product.objects.filter(user=request.user)
+    data = [
+        {
+            'id': str(product.id),
+            'name': product.name,
+            'price': product.price,
+            'stock': product.stock,
+            'description': product.description,
+            'category': product.category,
+            'thumbnail': product.thumbnail,
+            'created_at': product.created_at.isoformat() if product.created_at else None,
+            'is_featured': product.is_featured,
+            'user_id': product.user_id,
+        }
+        for product in product_list
+    ]
+
+    return JsonResponse(data, safe=False)
+
 def show_json_by_id(request, product_id):
     try:
         product = Product.objects.select_related('user').get(pk=product_id)
